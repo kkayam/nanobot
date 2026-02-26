@@ -189,6 +189,13 @@ class AgentLoop:
 
         while iteration < self.max_iterations:
             iteration += 1
+            messages.append({
+                "role": "user",
+                "content": (
+                    f"[System: Tool call iteration {iteration} of {self.max_iterations}. "
+                    "Call end_turn when your response is complete; end your turn before reaching the limit.]"
+                ),
+            })
 
             response = await self.provider.chat(
                 messages=messages,
@@ -477,6 +484,7 @@ class AgentLoop:
     _TOOL_RESULT_MAX_CHARS = 500
 
     _END_TURN_REMINDER_PREFIX = "[System: If your response is complete, call end_turn"
+    _ITERATION_PREFIX = "[System: Tool call iteration "
 
     def _save_turn(self, session: Session, messages: list[dict], skip: int) -> None:
         """Save new-turn messages into session, truncating large tool results."""
@@ -485,6 +493,8 @@ class AgentLoop:
             entry = {k: v for k, v in m.items() if k != "reasoning_content"}
             if entry.get("role") == "user" and isinstance(entry.get("content"), str):
                 if entry["content"].startswith(self._END_TURN_REMINDER_PREFIX):
+                    continue
+                if entry["content"].startswith(self._ITERATION_PREFIX):
                     continue
             if entry.get("role") == "tool" and isinstance(entry.get("content"), str):
                 content = entry["content"]
