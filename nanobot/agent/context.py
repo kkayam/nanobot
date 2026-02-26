@@ -78,7 +78,7 @@ Your workspace is at: {workspace_path}
 - If a tool call fails, analyze the error before retrying with a different approach.
 - Ask for clarification when the request is ambiguous.
 
-When your response is complete and you are ready for the user to reply, you must call the end_turn tool (with your final message as content, or leave content empty to use your last message). The user does not get their turn until you call end_turn. Use the 'message' tool only to send to a specific chat channel (e.g. progress or cron)."""
+When your response is complete and you are ready for the user to reply, call the end_turn tool (with your final message as content, or leave content empty to use your last message). If you have more to add, continue with more tools or content and call end_turn only when done. Use the 'message' tool only to send to a specific chat channel (e.g. progress or cron)."""
 
     @staticmethod
     def _build_runtime_context(channel: str | None, chat_id: str | None) -> str:

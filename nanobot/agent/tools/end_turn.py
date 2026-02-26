@@ -15,9 +15,9 @@ class EndTurnTool(Tool):
     @property
     def description(self) -> str:
         return (
-            "Call this when your response is complete and you are ready for the user to reply. "
+            "Call this only when your response is complete and you are ready for the user to reply. "
             "Pass your final message as 'content' (or leave empty to use your last message). "
-            "You must call end_turn to end your turn—the user does not get to reply until you do."
+            "If you have more to add (more tool calls or another message), do not call end_turn yet—just continue."
         )
 
     @property

@@ -246,11 +246,12 @@ class AgentLoop:
                 messages.append({
                     "role": "user",
                     "content": (
-                        "[System: Your turn is complete. Call the end_turn tool with your final "
-                        "message (use the content you just wrote, or a summary) so the user can reply.]"
+                        "[System: If your response is complete, call end_turn with your final message "
+                        "so the user can reply. If you have more to add (more tools or content), simply "
+                        "continue—do not call end_turn yet.]"
                     ),
                 })
-                # Do not set final_content; do not break — loop again so model calls end_turn
+                # Do not set final_content; do not break — loop again
 
         if final_content is None and iteration >= self.max_iterations:
             logger.warning("Max iterations ({}) reached", self.max_iterations)
@@ -475,7 +476,7 @@ class AgentLoop:
 
     _TOOL_RESULT_MAX_CHARS = 500
 
-    _END_TURN_REMINDER_PREFIX = "[System: Your turn is complete. Call the end_turn tool"
+    _END_TURN_REMINDER_PREFIX = "[System: If your response is complete, call end_turn"
 
     def _save_turn(self, session: Session, messages: list[dict], skip: int) -> None:
         """Save new-turn messages into session, truncating large tool results."""
