@@ -192,8 +192,9 @@ class AgentLoop:
             messages.append({
                 "role": "user",
                 "content": (
-                    f"[System: Tool call iteration {iteration} of {self.max_iterations}. "
-                    "Call end_turn when your response is complete; end your turn before reaching the limit.]"
+                    f"[System: Iteration {iteration} of {self.max_iterations}. "
+                    "To end your turn and let the user reply you MUST call the end_turn tool—text alone is not enough. "
+                    "Call end_turn when your response is complete; end before the limit.]"
                 ),
             })
 
@@ -253,9 +254,9 @@ class AgentLoop:
                 messages.append({
                     "role": "user",
                     "content": (
-                        "[System: If your response is complete, call end_turn with your final message "
-                        "so the user can reply. If you have more to add (more tools or content), simply "
-                        "continue—do not call end_turn yet.]"
+                        "[System: You replied with text but did not call end_turn. The user cannot reply until you call end_turn. "
+                        "You MUST call the end_turn tool now with your final message (use the content you just wrote, or a summary). "
+                        "If you have more to add, call more tools or send more text first, then call end_turn when done.]"
                     ),
                 })
                 # Do not set final_content; do not break — loop again
@@ -483,7 +484,7 @@ class AgentLoop:
 
     _TOOL_RESULT_MAX_CHARS = 500
 
-    _END_TURN_REMINDER_PREFIX = "[System: If your response is complete, call end_turn"
+    _END_TURN_REMINDER_PREFIX = "[System: You replied with text but did not call end_turn"
     _ITERATION_PREFIX = "[System: Tool call iteration "
 
     def _save_turn(self, session: Session, messages: list[dict], skip: int) -> None:
