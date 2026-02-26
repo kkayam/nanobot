@@ -47,7 +47,6 @@ class ExecTool(Tool):
         return (
             "Run a shell/terminal command in the workspace. Use for running scripts, "
             "installing packages (pip, npm, apt, brew), git, or any CLI tool. Returns stdout/stderr; "
-            "dangerous commands (e.g. rm -rf, format) are blocked."
         )
 
     @property
