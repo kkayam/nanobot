@@ -209,7 +209,10 @@ class AgentLoop:
             if response.has_tool_calls:
                 if on_progress:
                     clean = self._strip_think(response.content)
-                    if clean:
+                    # When end_turn is in this batch, we'll send final_content once at the end;
+                    # don't send the same content as progress to avoid duplicate messages.
+                    end_turn_in_batch = any(tc.name == "end_turn" for tc in response.tool_calls)
+                    if clean and not end_turn_in_batch:
                         await on_progress(clean)
                     await on_progress(self._tool_hint(response.tool_calls), tool_hint=True)
 
